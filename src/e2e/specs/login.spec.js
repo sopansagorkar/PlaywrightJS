@@ -1,9 +1,9 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 import {Placeholder,Credentials,LoginElements} from '../data/login.data.js';
-
+import { Environment } from '../../../environment.js';
 test('has title', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+  await page.goto(Environment.STAGE.url);
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/Swag Labs/);
