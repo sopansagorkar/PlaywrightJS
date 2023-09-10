@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+import {Placeholder,Credentials,LoginElements} from '../data/login.data.js';
 
 test('has title', async ({ page }) => {
   await page.goto('https://www.saucedemo.com/');
@@ -12,7 +13,7 @@ test('get started link', async ({ page }) => {
   await page.goto('https://www.saucedemo.com/');
 
   // Click the get started link.
-  await page.getByPlaceholder("Username").fill("standard_user");
-  await page.getByPlaceholder("Password").fill("secret_sauce");
-  await page.locator('input#login-button').click();
+  await page.getByPlaceholder(Placeholder.username).fill(Credentials.loginUser);
+  await page.getByPlaceholder(Placeholder.password).fill(Credentials.loginPwd);
+  await page.locator(LoginElements.loginButton).click();
 });
