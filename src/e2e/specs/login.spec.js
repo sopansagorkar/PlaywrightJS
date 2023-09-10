@@ -9,8 +9,8 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/Swag Labs/);
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+test('login to portal', async ({ page }) => {
+  await page.goto(Environment.STAGE.url);
 
   // Click the get started link.
   await page.getByPlaceholder(Placeholder.username).fill(Credentials.loginUser);

@@ -67,7 +67,9 @@ module.exports = defineConfig({
     // },
     {
       name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome',headless:false},
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
+        args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
+      },},
     },
   ],
 
