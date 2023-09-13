@@ -25,7 +25,7 @@ module.exports = defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     screenshot: 'only-on-failure',
-
+    baseURL: 'https://restful-booker.herokuapp.com',
     // Record trace only when retrying a test for the first time.
     trace: 'on-first-retry',
 
@@ -35,10 +35,10 @@ module.exports = defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    // {
-    //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'] },
-    // },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'],ignoreHTTPSErrors:true },
+    },
 
     // {
     //   name: 'firefox',
@@ -65,12 +65,12 @@ module.exports = defineConfig({
     //   name: 'Microsoft Edge',
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
-    {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
-        args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
-      },},
-    },
+    // {
+    //   name: 'Google Chrome',
+    //   use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
+    //     args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
+    //   },},
+    // },
   ],
 
   /* Run your local dev server before starting the tests */
