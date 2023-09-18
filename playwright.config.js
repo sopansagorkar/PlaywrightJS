@@ -24,7 +24,7 @@ module.exports = defineConfig({
   reporter: [['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
     baseURL: 'https://restful-booker.herokuapp.com',
     // Record trace only when retrying a test for the first time.
     trace: 'on-first-retry',
@@ -65,12 +65,12 @@ module.exports = defineConfig({
     //   name: 'Microsoft Edge',
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
-    //     args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
-    //   },},
-    // },
+    {
+      name: 'Google Chrome',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
+        args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
+      },},
+    },
   ],
 
   /* Run your local dev server before starting the tests */
