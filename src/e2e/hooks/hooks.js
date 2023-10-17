@@ -6,19 +6,19 @@ const { BeforeAll, Before, After, AfterAll , Status } = require('@cucumber/cucum
 
 // Launch options.
 const options = {
-  headless: true,
-  slowMo: 100
+  headless: false,
+  slowMo: 100,
 };
 
 // Create a global browser for the test session.
 BeforeAll(async () => {
   console.log('before all ...');
-  global.browser = await playwright['firefox'].launch(options);
+  global.browser = await playwright['chromium'].launch(options);
 });
 
 AfterAll(async () => {
   console.log('after all ...');
-  await global.browser.close();
+  //await global.browser.close();
 });
 
 // Create a fresh browser context for each test.
@@ -31,8 +31,8 @@ Before(async () => {
 // close the page and context after each test.
 After(async () => {
   console.log('after pass...');
-  await global.page.close();
-  await global.context.close();
+  //await global.page.close();
+  //await global.context.close();
 });
 
 

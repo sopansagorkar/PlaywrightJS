@@ -1,18 +1,20 @@
-const { Given,When,Then,And } = require('@cucumber/cucumber')
+const { Given, When, Then, And } = require("@cucumber/cucumber");
+const { LoginPage } = require("../pages/loginPage");
 
+let loginpage = new LoginPage();
 Given("I am on login page", function () {
-console.log("test");
+  loginpage.navigateToLoginScreen();
+  loginpage.verifyLoginPageIsDisplayed();
 });
 
 When("I enter {string}", function (string) {
-    console.log("test");
+  loginpage.enterText(string);
 });
 
-
 When("click on {string} button", function (string) {
-    console.log("test");
+  loginpage.submitLoginForm();
 });
 
 Then("verify user landed on {string} screen", function (string) {
-    console.log("test");
+  loginpage.verifyAfterLoginPage();
 });
