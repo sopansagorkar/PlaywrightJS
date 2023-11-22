@@ -1,33 +1,56 @@
-const {expect} = require('@playwright/test');
-const {Credentials}= require('../data/login.data');
+const { expect } = require("@playwright/test");
 
-locators = {
-  username_input: "#user-name",
-  password_input: "#password",
-  login_button: "#login-button",
-  inventory_container: "#inventory_container",
-};
+const locators = "locators";
+const data = "data";
 
-class LoginPage {
+exports.BasePage=class BasePage {
+
+  constructor(page){
+    this.page=page;
+  }
   async navigateToLoginScreen() {
-    return await global.page.goto('https://www.saucedemo.com');
+    return await page.goto("https://www.saucedemo.com");
   }
 
   async verifyLoginPageIsDisplayed() {
-    return expect(await global.page.title()).to.equal("Swag Labs");
+    return expect(await page.title()).to.equal("Swag Labs");
   }
 
-  async enterText(string) {
-    switch (string) {
-      case "username":
-        await global.page.fill(locators.username_input, Credentials.loginUser);
-      case "password":
-        await global.page.fill(locators.password_input, Credentials.loginPwd);
+  async findValueOrLocatorFromTestData(filename_key, dataType) {
+    const [file, keyString] = filename_key.split("_");
+    console.log(file+' '+keyString);
+    const fileName = require('../data/'+file+'');
+    const testData =
+      dataType === data
+        ? fileName.data
+        : dataType === locators
+        ? fileName.locators
+        : null;
+    if (testData) {
+      const entry = await testData.find(entry => entry.key === keyString);
+      if (entry) {
+        return await entry.value;
+      } else {
+        console.log("Key '" + keyString + "' not found in testData");
+      }
+    } else {
+      throw new Error(
+        "Invalid source specified. Use" + data + " or" + locators + "."
+      );
     }
   }
+  async enterText(inputText, element) {
+    this.text = await this.findValueOrLocatorFromTestData(inputText, data);
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    console.log('Text Entered '+this.text+' and Locator '+this.locator);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.type(this.text);
+  }
 
-  async submitLoginForm() {
-    await global.page.click(locators.login_button);
+  async submitLoginForm(element) {
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.click();
   }
 
   async verifyAfterLoginPage() {
@@ -36,5 +59,3 @@ class LoginPage {
     return expect(visible).to.equal(true);
   }
 }
-
-module.exports = { LoginPage };

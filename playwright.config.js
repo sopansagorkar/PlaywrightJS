@@ -35,10 +35,10 @@ module.exports = defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'],ignoreHTTPSErrors:true },
-    },
+    // {
+    //   name: 'chromium',
+    //   use: { ...devices['Desktop Chrome'],ignoreHTTPSErrors:true },
+    // },
 
     // {
     //   name: 'firefox',

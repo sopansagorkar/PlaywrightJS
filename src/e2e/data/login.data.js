@@ -11,4 +11,4 @@ const LoginElements = {
   loginButton: "input#login-button",
 };
 
-module.exports = { Credentials };
+module.exports = { Credentials, Placeholder, LoginElements };

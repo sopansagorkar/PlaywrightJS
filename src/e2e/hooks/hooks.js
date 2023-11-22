@@ -1,4 +1,4 @@
-const playwright = require('@playwright/test');
+let page = require('@playwright/test');
 const { BeforeAll, Before, After, AfterAll , Status } = require('@cucumber/cucumber');
 
 
@@ -13,7 +13,9 @@ const options = {
 // Create a global browser for the test session.
 BeforeAll(async () => {
   console.log('before all ...');
-  global.browser = await playwright['chromium'].launch(options);
+  let browser= await page.chromium.launch(options);
+  global.browser = browser;
+
 });
 
 AfterAll(async () => {

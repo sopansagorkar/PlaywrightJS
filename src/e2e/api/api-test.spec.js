@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 import postData from '../data/api-data.json';
-var token;
+let token;
 test('@get verify get request', async ({ request }) => {
     const response= await request.get('/booking/1');
     console.log(response.json());
