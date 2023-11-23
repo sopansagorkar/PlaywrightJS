@@ -47,6 +47,11 @@ exports.BasePage=class BasePage {
     await this.elementHandle.type(this.text);
   }
 
+  async clearText(element){
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.clear();
+  }
   async submitLoginForm(element) {
     this.locator = await this.findValueOrLocatorFromTestData(element, locators);
     this.elementHandle = await this.page.locator(this.locator);
