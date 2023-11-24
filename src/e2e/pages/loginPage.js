@@ -18,7 +18,6 @@ exports.BasePage=class BasePage {
 
   async findValueOrLocatorFromTestData(filename_key, dataType) {
     const [file, keyString] = filename_key.split("_");
-    console.log(file+' '+keyString);
     const fileName = require('../data/'+file+'');
     const testData =
       dataType === data
@@ -42,7 +41,6 @@ exports.BasePage=class BasePage {
   async enterText(inputText, element) {
     this.text = await this.findValueOrLocatorFromTestData(inputText, data);
     this.locator = await this.findValueOrLocatorFromTestData(element, locators);
-    console.log('Text Entered '+this.text+' and Locator '+this.locator);
     this.elementHandle = await this.page.locator(this.locator);
     await this.elementHandle.type(this.text);
   }

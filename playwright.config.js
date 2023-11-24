@@ -1,17 +1,27 @@
 // @ts-check
-const { defineConfig, devices } = require('@playwright/test');
+const { defineConfig, devices } = require("@playwright/test");
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+const environment = process.env.TestEnv || "dev";
+const fs = require("fs");
+
+const getConfig = (env) => {
+  try {
+    const configFile = `./src/e2e/enviroments/${env}-config.json`;
+    const configData = fs.readFileSync(configFile, "utf8");
+    return JSON.parse(configData);
+  } catch (err) {
+    console.error(`Error reading config file for ${env}:`, err);
+    return {};
+  }
+};
+
+const config=getConfig(environment);
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
 module.exports = defineConfig({
-  testDir: './src/e2e',
+  testDir: "./src/e2e",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -21,16 +31,16 @@ module.exports = defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['html', { open: 'never' }]],
+  reporter: [["html", { open: "never" }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    screenshot: 'on',
-    baseURL: 'https://restful-booker.herokuapp.com',
+    screenshot: "on",
+    baseURL: config.baseURL,
     // Record trace only when retrying a test for the first time.
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
 
     // Record video only when retrying a test for the first time.
-    video: 'on'
+    video: "on",
   },
 
   /* Configure projects for major browsers */
@@ -66,10 +76,17 @@ module.exports = defineConfig({
     //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
     // },
     {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 },launchOptions: {
-        args: ["--start-fullscreen"],channel: 'chrome',headless:false,slowMo:1000,
-      },},
+      name: "Google Chrome",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        launchOptions: {
+          args: ["--start-fullscreen"],
+          channel: "chrome",
+          headless: false,
+          slowMo: 1000,
+        },
+      },
     },
   ],
 
@@ -80,4 +97,3 @@ module.exports = defineConfig({
   //   reuseExistingServer: !process.env.CI,
   // },
 });
-
