@@ -58,6 +58,24 @@ exports.BasePage=class BasePage {
     await this.elementHandle.click();
   }
 
+  async verifyVisibility(element) {
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.isVisible();
+  }
+
+  async verifyNonVisibility(element) {
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.waitFor({state: 'hidden'});
+  }
+
+  async selectFromDropDown(optionValue,element) {
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.text = await this.findValueOrLocatorFromTestData(optionValue, data);
+    await this.page.selectOption(this.locator,this.text);
+  }
+
   async verifyAfterLoginPage() {
     await global.page.waitForSelector(locators.inventory_container);
     const visible = await global.page.isVisible(locators.inventory_container);
