@@ -79,4 +79,12 @@ exports.BasePage=class BasePage {
     const visible = await global.page.isVisible(locators.inventory_container);
     return expect(visible).to.equal(true);
   }
+  async clickAllElement(element){
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    this.elementCount = await this.page.locator(this.locator).count();
+    for(let i=0;i<this.elementCount;i++){
+      await this.elementHandle.click();
+    }
+  }
 }
