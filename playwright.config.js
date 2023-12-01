@@ -35,7 +35,7 @@ module.exports = defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     screenshot: "only-on-failure",
-    baseURL: config.baseURL,
+    baseURL: config.baseUrl,
     // Record trace only when retrying a test for the first time.
     trace: "retain-on-failure",
 

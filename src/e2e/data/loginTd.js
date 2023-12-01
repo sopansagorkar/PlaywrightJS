@@ -8,5 +8,6 @@ module.exports = {
     data: [
         {'key': 'user', 'value': 'standard_user'},
         {'key': 'pass', 'value': 'secret_sauce'},
+        {'key': 'titleValue', 'value': 'Swag Labs'}
     ],
 };

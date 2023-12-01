@@ -7,12 +7,14 @@ exports.BasePage = class BasePage {
   constructor(page) {
     this.page = page;
   }
-  async navigateToLoginScreen() {
-    return await page.goto("https://www.saucedemo.com");
+  async visitUrl() {
+     await this.page.goto('/');
   }
 
-  async verifyLoginPageIsDisplayed() {
-    return expect(await page.title()).to.equal("Swag Labs");
+  async verifyTitle(titleValue) {
+    const expectedValue= await this.findValueOrLocatorFromTestData(titleValue,data);
+    const actualValue= await this.page.title();
+    expect(actualValue).toContain(expectedValue);
   }
 
   async findValueOrLocatorFromTestData(filename_key, dataType) {
