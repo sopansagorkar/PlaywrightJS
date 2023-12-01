@@ -14,5 +14,5 @@ test('login to portal', async ({ page }) => {
   await basePage.visitUrl();
   await basePage.enterText('loginTd_user','loginTd_userName');
   await basePage.enterText('loginTd_pass','loginTd_password');
-  await basePage.submitLoginForm('loginTd_login');
+  await basePage.clickElement('loginTd_login');
 });

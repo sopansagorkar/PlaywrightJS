@@ -8,12 +8,15 @@ exports.BasePage = class BasePage {
     this.page = page;
   }
   async visitUrl() {
-     await this.page.goto('/');
+    await this.page.goto("/");
   }
 
   async verifyTitle(titleValue) {
-    const expectedValue= await this.findValueOrLocatorFromTestData(titleValue,data);
-    const actualValue= await this.page.title();
+    const expectedValue = await this.findValueOrLocatorFromTestData(
+      titleValue,
+      data
+    );
+    const actualValue = await this.page.title();
     expect(actualValue).toContain(expectedValue);
   }
 
@@ -51,7 +54,7 @@ exports.BasePage = class BasePage {
     this.elementHandle = await this.page.locator(this.locator);
     await this.elementHandle.clear();
   }
-  async submitLoginForm(element) {
+  async clickElement(element) {
     this.locator = await this.findValueOrLocatorFromTestData(element, locators);
     this.elementHandle = await this.page.locator(this.locator);
     await this.elementHandle.click();
@@ -99,5 +102,15 @@ exports.BasePage = class BasePage {
       return fetchResponse.status;
     }, fullImgUrl);
     expect(response).toBe(200);
+  }
+
+  async verifyText(text, element) {
+    this.text = await this.findValueOrLocatorFromTestData(text, data);
+    this.locator = await this.findValueOrLocatorFromTestData(element, locators);
+    this.elementHandle = await this.page.locator(this.locator);
+    await this.elementHandle.waitFor({ state: "visible" });
+    const eleText = await this.elementHandle.innerText();
+    console.log("Element test is = "+this.elementHandle.innerText().toString());
+    expect(eleText).toBe(this.text);
   }
 };
