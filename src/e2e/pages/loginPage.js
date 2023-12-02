@@ -110,7 +110,6 @@ exports.BasePage = class BasePage {
     this.elementHandle = await this.page.locator(this.locator);
     await this.elementHandle.waitFor({ state: "visible" });
     const eleText = await this.elementHandle.innerText();
-    console.log("Element test is = "+this.elementHandle.innerText().toString());
     expect(eleText).toBe(this.text);
   }
 };
