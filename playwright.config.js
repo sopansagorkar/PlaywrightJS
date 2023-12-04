@@ -54,7 +54,6 @@ module.exports = defineConfig({
           args: ["--start-fullscreen"],
           channel: "chrome",
           headless: true,
-          slowMo: 1000,
         },
       },
     },
