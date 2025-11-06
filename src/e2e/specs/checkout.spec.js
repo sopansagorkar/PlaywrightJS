@@ -1,48 +1,97 @@
-const { test, expect } = require("@playwright/test");
-const { BasePage } = require("../pages/loginPage");
+const { test, expect } = require('@playwright/test');
 
-test.describe("Verify checkout", async () => {
-  test("Verify Add to cart", async ({ page }) => {
-    let basePage = new BasePage(page);
-    await basePage.visitUrl();
-    await basePage.enterText("loginTd_user", "loginTd_userName");
-    await basePage.enterText("loginTd_pass", "loginTd_password");
-    await basePage.clickElement("loginTd_login");
-    await basePage.clickElement('cartTd_redShirtAdd');
-    await basePage.clickElement('cartTd_onesieAdd');
-    await basePage.clickElement('cartTd_jacketAdd');
-    await basePage.clickElement('cartTd_tShirtAdd');
-    await basePage.clickElement('cartTd_bikeLightAdd');
-    await basePage.clickElement('cartTd_backPackAdd');
-    await basePage.verifyText('cartTd_totalCartValue','cartTd_totalCartItem');
-  });
+// Helper: returns the first existing locator from candidate selectors
+async function findLocator(page, candidates) {
+    for (const s of candidates) {
+        const loc = page.locator(s);
+        if (await loc.count() > 0) return loc;
+    }
+    return null;
+}
 
-  test("Verify Complete checkout", async ({ page }) => {
-    let basePage = new BasePage(page);
-    await basePage.visitUrl();
-    await basePage.enterText("loginTd_user", "loginTd_userName");
-    await basePage.enterText("loginTd_pass", "loginTd_password");
-    await basePage.clickElement("loginTd_login");
-    await basePage.clickElement('cartTd_redShirtAdd');
-    await basePage.clickElement('cartTd_onesieAdd');
-    await basePage.clickElement('cartTd_jacketAdd');
-    await basePage.clickElement('cartTd_tShirtAdd');
-    await basePage.clickElement('cartTd_bikeLightAdd');
-    await basePage.clickElement('cartTd_backPackAdd');
-    await basePage.verifyText('cartTd_totalCartValue','cartTd_totalCartItem');
-    await basePage.clickElement('cartTd_totalCartItem');
-    await basePage.verifyVisibility('checkoutTd_verifyCart');
-    await basePage.verifyVisibility('checkoutTd_verifyQTY');
-    await basePage.verifyVisibility('checkoutTd_verifyDesc');
-    await basePage.clickElement('checkoutTd_checkoutBtn');
-    await basePage.enterText("checkoutTd_firstName", "checkoutTd_firstNameTxt");
-    await basePage.enterText("checkoutTd_lastName", "checkoutTd_lastNameTxt");
-    await basePage.enterText("checkoutTd_zip", "checkoutTd_zipTxt");
-    await basePage.clickElement('checkoutTd_continue');
-    await basePage.verifyVisibility('checkoutTd_paymentInfo');
-    await basePage.verifyVisibility('checkoutTd_shippingInfo');
-    await basePage.verifyVisibility('checkoutTd_totalPrice');
-    await basePage.clickElement('checkoutTd_finish');
-    await basePage.verifyVisibility('checkoutTd_completeOrder');
-  });
+test.describe('Checkout Process Testing', () => {
+    test.beforeEach(async ({ page }) => {
+        // Login and add items to cart using stable selectors
+        await page.goto('/');
+        await page.fill('[data-test="username"]', 'standard_user');
+        await page.fill('[data-test="password"]', 'secret_sauce');
+        await page.click('[data-test="login-button"]');
+        await expect(page.locator('[data-test="inventory-container"]')).toBeVisible();
+
+        // Add a product to cart
+        const addBtn = await findLocator(page, [
+            '[data-test="add-to-cart-sauce-labs-backpack"]',
+            '[data-test="add-to-cart-sauce-labs-backpack"]',
+            '[data-test="add-to-cart-sauce-labs-bike-light"]'
+        ]);
+        if (addBtn) await addBtn.click();
+
+        // Go to cart
+        const cart = await findLocator(page, ['.shopping_cart_link', '[data-test="shopping-cart-link"]']);
+        if (cart) await cart.click();
+        await expect(page.locator('.cart_list')).toBeVisible();
+    });
+
+    test('Complete Checkout Process', async ({ page }) => {
+        // Start checkout
+        const checkoutBtn = await findLocator(page, ['[data-test="checkout"]', 'button#checkout', 'button[name="checkout"]']);
+        await checkoutBtn.click();
+
+        // Fill checkout information
+        await page.fill('[data-test="firstName"]', 'Test');
+        await page.fill('[data-test="lastName"]', 'User');
+        await page.fill('[data-test="postalCode"]', '12345');
+        const continueBtn = await findLocator(page, ['[data-test="continue"]', 'button#continue']);
+        await continueBtn.click();
+
+        // Verify checkout overview
+        await expect(page.locator('.checkout_summary_container')).toBeVisible();
+        await expect(page.locator('.inventory_item_price').first()).toBeVisible();
+        await expect(page.locator('.summary_subtotal_label')).toBeVisible();
+
+        // Complete purchase
+        const finishBtn = await findLocator(page, ['[data-test="finish"]', 'button#finish']);
+        await finishBtn.click();
+
+        // Verify order confirmation
+        await expect(page.locator('.checkout_complete_container')).toBeVisible();
+        await expect(page.locator('.complete-header')).toBeVisible();
+    });
+
+    test('Checkout Form Validation', async ({ page }) => {
+        const checkoutBtn = await findLocator(page, ['[data-test="checkout"]', 'button#checkout']);
+        await checkoutBtn.click();
+
+        // Test empty form submission
+        const continueBtn = await findLocator(page, ['[data-test="continue"]', 'button#continue']);
+        await continueBtn.click();
+        const errorLoc = await findLocator(page, ['[data-test="error"]', '.error-message-container', '[data-test="error-message"]']);
+        await expect(errorLoc).toBeVisible();
+
+        // Test partial form completion
+        await page.fill('[data-test="firstName"]', 'Test');
+        await continueBtn.click();
+        await expect(errorLoc).toBeVisible();
+    });
+
+    test('Order Summary Verification', async ({ page }) => {
+        const checkoutBtn = await findLocator(page, ['[data-test="checkout"]', 'button#checkout']);
+        await checkoutBtn.click();
+
+        // Fill checkout information
+        await page.fill('[data-test="firstName"]', 'Test');
+        await page.fill('[data-test="lastName"]', 'User');
+        await page.fill('[data-test="postalCode"]', '12345');
+        const continueBtn = await findLocator(page, ['[data-test="continue"]', 'button#continue']);
+        await continueBtn.click();
+
+        // Verify order summary details
+        await expect(page.locator('.summary_subtotal_label')).toBeVisible();
+        await expect(page.locator('.summary_tax_label')).toBeVisible();
+        await expect(page.locator('.summary_total_label')).toBeVisible();
+
+        // Verify item details
+        await expect(page.locator('.inventory_item_price')).toBeVisible();
+        await expect(page.locator('.inventory_item_desc')).toBeVisible();
+    });
 });

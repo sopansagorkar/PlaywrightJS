@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "key": "standard_user",
+      "value": "standard_user"
+    },
+    {
+      "key": "locked_out_user",
+      "value": "locked_out_user"
+    },
+    {
+      "key": "password",
+      "value": "secret_sauce"
+    },
+    {
+      "key": "invalid_user",
+      "value": "invalid_user"
+    },
+    {
+      "key": "invalid_password",
+      "value": "wrong_password"
+    }
+  ],
+  "locators": [
+    {
+      "key": "username",
+      "value": "[data-test=\"username\"]"
+    },
+    {
+      "key": "password",
+      "value": "[data-test=\"password\"]"
+    },
+    {
+      "key": "login_button",
+      "value": "[data-test=\"login-button\"]"
+    },
+    {
+      "key": "error_message",
+      "value": "[data-test=\"error\"]"
+    },
+    {
+      "key": "inventory_container",
+      "value": "#inventory_container"
+    }
+  ]
+}

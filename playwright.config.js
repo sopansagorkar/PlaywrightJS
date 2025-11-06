@@ -31,16 +31,17 @@ module.exports = defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: "allure-playwright",
+  //reporter: "allure-playwright",
+  reporter: [["html", { open: "never" }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    screenshot: "only-on-failure",
+    screenshot: "on",
     baseURL: config.baseUrl,
     // Record trace only when retrying a test for the first time.
-    trace: "retain-on-failure",
+    trace: "on",
 
     // Record video only when retrying a test for the first time.
-    video: "retain-on-failure",
+    video: "on",
   },
 
   /* Configure projects for major browsers */
