@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cucumber-js --require src/e2e/steps/*.js --require src/e2e/hooks/*.js --format html:./reports/cucumber_report.html --format summary --format @cucumber/pretty-formatter",
-    "test:dev":"cross-env TestEnv=dev npx playwright test --reporter=line,allure-playwright",
+    "test:dev":"cross-env TestEnv=dev npx playwright test",
     "debug:dev":"cross-env TestEnv=dev npx playwright test --debug"
   },
   "repository": {
